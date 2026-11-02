@@ -1,0 +1,21 @@
+{
+  "name": "devstandard-site",
+  "version": "1.0.0",
+  "description": "Portail web et documentation de DevStandard — Registre open-source de standards d'ingénierie logicielle pour assistants IA",
+  "private": true,
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "keywords": [
+    "devstandard",
+    "skills",
+    "agent-skills",
+    "documentation",
+    "cursor",
+    "claude",
+    "antigravity"
+  ],
+  "author": "Marilin66",
+  "license": "MIT"
+}
