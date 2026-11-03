@@ -1,537 +1,2012 @@
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth bg-white text-slate-900">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DevStandard — Registre Ouvert de Standards d'Ingénierie pour Développeurs et IA</title>
-  <meta name="description" content="Standards rigoureux d'ingénierie logicielle pour applications web et mobiles. Sans artifice IA, fond clair classique, accessibilité WCAG 2.2 AA et architecture sécurisée.">
-  
-  <!-- Tailwind CSS & Marked.js -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>DevStandard — Registre Ouvert de Standards d'Ingénierie pour IA de Développement</title>
+  <meta name="description" content="Standards rigoureux d'ingénierie logicielle pour vos assistants IA (Antigravity, Cursor, Claude Code, Codex). Design sobre, sécurité, accessibilité WCAG 2.2 AA. Web & Mobile.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#eff6ff',
-              100: '#dbeafe',
-              600: '#1d4ed8',
-              700: '#1e40af',
-              800: '#1e3a8a',
-            }
-          }
-        }
-      }
-    }
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Design Tokens Human-Crafted (Conforme au skill frontend/design-tokens) */
+    /* =========================================================
+       RESET & BASE
+    ========================================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --surface-canvas: #ffffff;
-      --surface-card: #ffffff;
-      --surface-subtle: #f8fafc;
-      --surface-border: #e2e8f0;
-      --text-primary: #0f172a;
-      --text-secondary: #475569;
-      --text-muted: #94a3b8;
-      --action-primary: #1d4ed8;
-      --action-primary-hover: #1e40af;
-      --action-primary-focus: #3b82f6;
+      /* Palette institutionnelle DevStandard (secteur Tech/Outils) */
+      --color-primary:      #003189;   /* Bleu institutionnel profond */
+      --color-primary-dark: #002060;   /* Hover / barre d'identité */
+      --color-primary-light:#e8edf8;   /* Surface teintée */
+      --color-accent:       #d63626;   /* Rouge accent (alertes, badges) */
+      --color-accent-light: #fdf1f0;
+
+      /* Surfaces */
+      --surface-white:  #ffffff;
+      --surface-light:  #f5f7fa;
+      --surface-border: #dde1e9;
+      --surface-border-dark: #b0b8cc;
+
+      /* Textes */
+      --text-title:   #0d1b3e;
+      --text-body:    #2c3a52;
+      --text-muted:   #5f6d88;
+      --text-inverse: #ffffff;
+
+      /* Footer */
+      --footer-bg:      #0d1b3e;
+      --footer-border:  #1e2f5c;
+      --footer-text:    #a8b4cc;
+      --footer-heading: #dde5f5;
+
+      /* Spacing */
+      --container-max: 1200px;
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 40px;
+      --space-2xl: 64px;
     }
 
-    /* WCAG 2.2 AA : Réduction de mouvement */
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--surface-white);
+      color: var(--text-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, ::before, ::after {
         animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
     }
 
-    /* Styles Markdown sobres et lisibles */
-    .markdown-body h1 { font-size: 1.4rem; font-weight: 700; margin-top: 1.25rem; margin-bottom: 0.75rem; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; }
-    .markdown-body h2 { font-size: 1.2rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; color: #1e293b; }
-    .markdown-body h3 { font-size: 1.05rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; color: #334155; }
-    .markdown-body p { margin-bottom: 0.75rem; color: #475569; line-height: 1.6; }
-    .markdown-body ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 0.75rem; color: #475569; }
-    .markdown-body li { margin-bottom: 0.25rem; }
-    .markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; font-size: 0.85rem; }
-    .markdown-body th, .markdown-body td { border: 1px solid #cbd5e1; padding: 0.5rem 0.75rem; text-align: left; }
-    .markdown-body th { background: #f1f5f9; color: #0f172a; font-weight: 600; }
-    .markdown-body td { color: #334155; }
-    .markdown-body pre { background: #0f172a; color: #f8fafc; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1rem; font-size: 0.825rem; }
-    .markdown-body code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.85rem; }
-    .markdown-body :not(pre) > code { background: #f1f5f9; color: #0f172a; padding: 0.15rem 0.35rem; border-radius: 0.25rem; border: 1px solid #e2e8f0; }
-    .markdown-body blockquote { border-left: 3px solid #1d4ed8; padding-left: 1rem; color: #1e3a8a; background: #eff6ff; padding-top: 0.5rem; padding-bottom: 0.5rem; margin-bottom: 1rem; border-radius: 0 0.375rem 0.375rem 0; }
+    /* =========================================================
+       UTILITAIRES
+    ========================================================= */
+    .container {
+      width: 100%;
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
+    /* Focus WCAG 2.2 AA */
+    :focus-visible {
+      outline: 3px solid #ffbf47;
+      outline-offset: 2px;
+    }
+
+    /* =========================================================
+       SKIP LINK
+    ========================================================= */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 0;
+      background: var(--color-primary);
+      color: #fff;
+      padding: 10px 20px;
+      font-weight: 600;
+      font-size: 14px;
+      z-index: 9999;
+      text-decoration: none;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* =========================================================
+       1. BARRE D'IDENTITÉ OFFICIELLE (top utility bar)
+       Pattern GOV.UK / DSFR / ANIP
+    ========================================================= */
+    .identity-bar {
+      background: var(--color-primary-dark);
+      color: #c8d4f0;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      border-bottom: 2px solid var(--color-accent);
+    }
+    .identity-bar__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 36px;
+      gap: 16px;
+    }
+    .identity-bar__brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .identity-bar__logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      background: var(--color-accent);
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .identity-bar__logo svg { width: 13px; height: 13px; color: #fff; }
+    .identity-bar__name {
+      font-weight: 700;
+      font-size: 13px;
+      color: #fff;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+    .identity-bar__separator { color: #4a5e8a; }
+    .identity-bar__tagline { color: #8fa3cc; font-size: 11.5px; }
+    .identity-bar__links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .identity-bar__links a {
+      color: #8fa3cc;
+      text-decoration: none;
+      font-size: 11.5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.15s;
+    }
+    .identity-bar__links a:hover { color: #fff; }
+    .identity-bar__links a svg { width: 12px; height: 12px; }
+
+    /* =========================================================
+       2. HEADER PRINCIPAL
+       Pattern: Service-public.fr / ANIP / GOV.UK
+    ========================================================= */
+    .site-header {
+      background: var(--surface-white);
+      border-bottom: 1px solid var(--surface-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .site-header__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      gap: 24px;
+    }
+    .site-header__brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .site-header__icon {
+      width: 40px;
+      height: 40px;
+      background: var(--color-primary);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .site-header__icon svg { width: 22px; height: 22px; color: #fff; }
+    .site-header__title-block {}
+    .site-header__title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-title);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    .site-header__subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-top: 1px;
+    }
+
+    /* Navigation principale */
+    .site-nav { display: flex; align-items: center; gap: 4px; flex: 1; justify-content: center; }
+    .site-nav__link {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-body);
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+      position: relative;
+    }
+    .site-nav__link:hover { background: var(--surface-light); color: var(--color-primary); }
+    .site-nav__link.active { color: var(--color-primary); font-weight: 600; }
+    .site-nav__link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 12px; right: 12px;
+      height: 2px;
+      background: var(--color-primary);
+      border-radius: 2px 2px 0 0;
+    }
+
+    /* Actions header */
+    .site-header__actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .btn-github {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      background: var(--color-primary);
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 4px;
+      border: 1px solid var(--color-primary);
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .btn-github:hover { background: var(--color-primary-dark); border-color: var(--color-primary-dark); }
+    .btn-github svg { width: 16px; height: 16px; }
+
+    /* Mobile hamburger */
+    .mobile-menu-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 40px; height: 40px;
+      background: none;
+      border: 1px solid var(--surface-border);
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--text-body);
+    }
+    .mobile-menu-btn svg { width: 20px; height: 20px; }
+
+    @media (max-width: 900px) {
+      .site-nav { display: none; }
+      .mobile-menu-btn { display: flex; }
+      .btn-github span { display: none; }
+      .btn-github { padding: 8px 10px; }
+    }
+
+    /* =========================================================
+       3. HERO — Bannière pleine largeur, fond bleu institutionnel
+       Pattern: DSFR hero / service-public.fr / ANIP
+    ========================================================= */
+    .hero {
+      background: var(--color-primary);
+      color: var(--text-inverse);
+      padding: 56px 0 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Motif de fond discret — grille géométrique sobre */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+    .hero__inner {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 28px;
+      max-width: 760px;
+    }
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 12px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.9);
+    }
+    .hero__badge svg { width: 13px; height: 13px; opacity: 0.8; }
+    .hero__title {
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 800;
+      line-height: 1.18;
+      letter-spacing: -0.025em;
+      color: #fff;
+    }
+    .hero__title em {
+      font-style: normal;
+      color: #ffd166;
+    }
+    .hero__description {
+      font-size: 16px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.82);
+      max-width: 620px;
+    }
+
+    /* Bloc de commande hero */
+    .hero__command-block {
+      width: 100%;
+      max-width: 600px;
+    }
+    .hero__command-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .hero__command-box {
+      display: flex;
+      align-items: center;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .hero__command-prefix {
+      padding: 0 14px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.4);
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255,255,255,0.12);
+      height: 46px;
+      display: flex;
+      align-items: center;
+    }
+    .hero__command-text {
+      flex: 1;
+      padding: 0 14px;
+      font-family: 'Courier New', monospace;
+      font-size: 13.5px;
+      color: #fff;
+      background: none;
+      border: none;
+      outline: none;
+      cursor: default;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .hero__command-copy {
+      flex-shrink: 0;
+      height: 46px;
+      padding: 0 20px;
+      background: #fff;
+      color: var(--color-primary);
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .hero__command-copy:hover { background: #edf0fb; }
+    .hero__command-copy svg { width: 14px; height: 14px; }
+
+    /* Raccourcis packs */
+    .hero__packs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .pack-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 3px;
+      color: rgba(255,255,255,0.88);
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .pack-btn:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.35); }
+    .pack-btn svg { width: 13px; height: 13px; opacity: 0.75; }
+
+    /* =========================================================
+       4. BARRE DE STATISTIQUES
+       Pattern institutionnel: chiffres clés sur fond clair
+    ========================================================= */
+    .stats-bar {
+      background: var(--surface-white);
+      border-bottom: 1px solid var(--surface-border);
+      padding: 0;
+    }
+    .stats-bar__inner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-left: 1px solid var(--surface-border);
+    }
+    .stat-item {
+      padding: 20px 24px;
+      border-right: 1px solid var(--surface-border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .stat-item__icon {
+      width: 40px; height: 40px;
+      background: var(--color-primary-light);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .stat-item__icon svg { width: 20px; height: 20px; color: var(--color-primary); }
+    .stat-item__value {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--color-primary);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+    .stat-item__label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-top: 3px;
+    }
+
+    @media (max-width: 768px) {
+      .stats-bar__inner { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .stats-bar__inner { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* =========================================================
+       5. SECTION GÉNÉRIQUE
+    ========================================================= */
+    .section { padding: 56px 0; }
+    .section--light { background: var(--surface-light); }
+    .section--white { background: var(--surface-white); }
+    .section--bordered { border-top: 1px solid var(--surface-border); border-bottom: 1px solid var(--surface-border); }
+
+    /* En-tête de section — style institutionnel */
+    .section-header {
+      margin-bottom: 36px;
+    }
+    .section-header--centered { text-align: center; }
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-primary);
+      margin-bottom: 10px;
+      padding-left: 10px;
+      border-left: 3px solid var(--color-primary);
+    }
+    .section-header--centered .section-eyebrow { border-left: none; padding-left: 0; }
+    .section-title {
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 800;
+      color: var(--text-title);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+    .section-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    /* =========================================================
+       6. ÉTAPES — Comment ça marche
+       Pattern: numérotation institutionnelle, carrés
+    ========================================================= */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--surface-border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .step-item {
+      padding: 32px 28px;
+      background: var(--surface-white);
+      border-right: 1px solid var(--surface-border);
+      position: relative;
+    }
+    .step-item:last-child { border-right: none; }
+    .step-item::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--color-primary);
+    }
+    .step-number {
+      width: 36px; height: 36px;
+      background: var(--color-primary);
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+    .step-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-title);
+      margin-bottom: 10px;
+    }
+    .step-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+    .step-desc code {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      background: var(--surface-light);
+      color: var(--color-primary);
+      padding: 1px 6px;
+      border: 1px solid var(--surface-border);
+      border-radius: 2px;
+    }
+
+    @media (max-width: 768px) {
+      .steps-grid { grid-template-columns: 1fr; }
+      .step-item { border-right: none; border-bottom: 1px solid var(--surface-border); }
+      .step-item:last-child { border-bottom: none; }
+    }
+
+    /* =========================================================
+       7. CATALOGUE DES STANDARDS
+    ========================================================= */
+
+    /* Barre de contrôle (recherche + filtres) */
+    .catalogue-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .catalogue-controls__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .catalogue-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-title);
+    }
+    .catalogue-subtitle {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Champ de recherche institutionnel */
+    .search-field {
+      position: relative;
+      width: 280px;
+    }
+    .search-field__icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      width: 16px; height: 16px;
+      pointer-events: none;
+    }
+    .search-field__input {
+      width: 100%;
+      padding: 9px 12px 9px 38px;
+      border: 1px solid var(--surface-border-dark);
+      border-radius: 3px;
+      font-size: 13.5px;
+      font-family: inherit;
+      color: var(--text-body);
+      background: var(--surface-white);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      min-height: 40px;
+    }
+    .search-field__input::placeholder { color: var(--text-muted); }
+    .search-field__input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(0,49,137,0.12);
+    }
+
+    /* Onglets de domaines — style institutionnel */
+    .domain-tabs {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 1px solid var(--surface-border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .domain-tab {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: var(--surface-white);
+      border: none;
+      border-right: 1px solid var(--surface-border);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .domain-tab:last-child { border-right: none; }
+    .domain-tab:hover { background: var(--surface-light); color: var(--text-body); }
+    .domain-tab.active {
+      background: var(--color-primary);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Grille de cartes */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--surface-border);
+      border: 1px solid var(--surface-border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .skill-card {
+      background: var(--surface-white);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+    .skill-card:hover { background: #fafbfe; }
+    .skill-card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .skill-card__domain-badge {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 3px 8px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .badge-frontend { background: #e8f0fb; color: #003189; }
+    .badge-backend  { background: #e6f6ee; color: #166534; }
+    .badge-engineering { background: #f3f4f6; color: #374151; }
+
+    .skill-card__name {
+      font-size: 11px;
+      font-family: 'Courier New', monospace;
+      color: var(--text-muted);
+      text-align: right;
+    }
+    .skill-card__title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-title);
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+    .skill-card:hover .skill-card__title { color: var(--color-primary); }
+    .skill-card__desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 16px;
+      flex: 1;
+    }
+    .skill-card__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 16px;
+    }
+    .skill-tag {
+      font-size: 10.5px;
+      padding: 2px 7px;
+      background: var(--surface-light);
+      color: var(--text-muted);
+      border: 1px solid var(--surface-border);
+      border-radius: 2px;
+    }
+    .skill-card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-top: 14px;
+      border-top: 1px solid var(--surface-border);
+      margin-top: auto;
+    }
+    .btn-read {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--color-primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: inherit;
+      padding: 0;
+      transition: gap 0.15s;
+    }
+    .btn-read:hover { gap: 8px; }
+    .btn-read svg { width: 14px; height: 14px; }
+    .btn-install {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      background: var(--surface-light);
+      border: 1px solid var(--surface-border);
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-body);
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .btn-install:hover { background: var(--color-primary-light); border-color: var(--color-primary); color: var(--color-primary); }
+    .btn-install svg { width: 13px; height: 13px; }
+
+    /* Aucun résultat */
+    .no-results {
+      grid-column: 1 / -1;
+      padding: 48px 24px;
+      text-align: center;
+      background: var(--surface-light);
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .no-results svg { width: 32px; height: 32px; margin: 0 auto 12px; display: block; opacity: 0.4; }
+
+    @media (max-width: 1024px) {
+      .skills-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .skills-grid { grid-template-columns: 1fr; }
+      .search-field { width: 100%; }
+    }
+
+    /* =========================================================
+       8. SECTION COMPATIBILITÉ
+       Pattern: tableau institutionnel en grille
+    ========================================================= */
+    .compat-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: var(--surface-border);
+      border: 1px solid var(--surface-border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .compat-item {
+      background: var(--surface-white);
+      padding: 20px 16px;
+      text-align: center;
+    }
+    .compat-item__icon {
+      width: 40px; height: 40px;
+      background: var(--surface-light);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+    }
+    .compat-item__icon svg { width: 20px; height: 20px; color: var(--color-primary); }
+    .compat-item__name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-title);
+      margin-bottom: 6px;
+    }
+    .compat-badge {
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 3px 8px;
+      background: #e6f6ee;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    @media (max-width: 900px) {
+      .compat-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .compat-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* =========================================================
+       9. SECTION FAQ — Style accordéon institutionnel
+    ========================================================= */
+    .faq-list { display: flex; flex-direction: column; gap: 1px; background: var(--surface-border); border: 1px solid var(--surface-border); border-radius: 2px; overflow: hidden; }
+    .faq-item { background: var(--surface-white); }
+    .faq-question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 24px;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--text-title);
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .faq-question:hover { background: var(--surface-light); }
+    .faq-question[aria-expanded="true"] { color: var(--color-primary); background: var(--color-primary-light); }
+    .faq-icon { width: 20px; height: 20px; color: var(--text-muted); flex-shrink: 0; transition: transform 0.2s; }
+    .faq-question[aria-expanded="true"] .faq-icon { transform: rotate(180deg); color: var(--color-primary); }
+    .faq-answer {
+      display: none;
+      padding: 0 24px 20px;
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      border-top: 1px solid var(--surface-border);
+    }
+    .faq-answer.open { display: block; }
+    .faq-answer strong { color: var(--text-body); font-weight: 600; }
+    .faq-answer code {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      background: var(--surface-light);
+      color: var(--color-primary);
+      padding: 1px 6px;
+      border: 1px solid var(--surface-border);
+      border-radius: 2px;
+    }
+
+    /* =========================================================
+       10. MODALE DE LECTURE DU STANDARD
+    ========================================================= */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 27, 62, 0.5);
+      z-index: 200;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 24px;
+      overflow-y: auto;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface-white);
+      border: 1px solid var(--surface-border);
+      border-radius: 2px;
+      width: 100%;
+      max-width: 860px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+      margin: auto;
+    }
+    /* Bandeau bleu du domaine en haut de la modale */
+    .modal__domain-bar {
+      background: var(--color-primary);
+      color: #fff;
+      padding: 8px 24px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 2px 2px 0 0;
+    }
+    .modal__close-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      width: 28px; height: 28px;
+      border-radius: 2px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .modal__close-btn:hover { background: rgba(255,255,255,0.25); }
+    .modal__close-btn svg { width: 16px; height: 16px; }
+
+    .modal__header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--surface-border);
+    }
+    .modal__title { font-size: 18px; font-weight: 800; color: var(--text-title); }
+
+    /* Barre de commande d'installation */
+    .modal__command-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      background: var(--surface-light);
+      border-bottom: 1px solid var(--surface-border);
+    }
+    .modal__command-code {
+      font-family: 'Courier New', monospace;
+      font-size: 12.5px;
+      color: var(--text-body);
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .modal__copy-btn {
+      padding: 7px 16px;
+      background: var(--color-primary);
+      color: #fff;
+      font-size: 12.5px;
+      font-weight: 600;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .modal__copy-btn:hover { background: var(--color-primary-dark); }
+    .modal__copy-btn svg { width: 13px; height: 13px; }
+
+    /* Contenu Markdown dans la modale */
+    .modal__content {
+      padding: 28px 32px;
+      overflow-y: auto;
+      max-height: 60vh;
+    }
+    .md h1 { font-size: 1.3rem; font-weight: 800; color: var(--text-title); margin: 1.25rem 0 0.75rem; padding-bottom: 0.4rem; border-bottom: 2px solid var(--surface-border); }
+    .md h2 { font-size: 1.1rem; font-weight: 700; color: var(--text-title); margin: 1.25rem 0 0.5rem; }
+    .md h3 { font-size: 1rem; font-weight: 600; color: var(--text-body); margin: 1rem 0 0.4rem; }
+    .md p { margin-bottom: 0.75rem; color: var(--text-muted); line-height: 1.7; font-size: 13.5px; }
+    .md ul, .md ol { margin-left: 1.5rem; margin-bottom: 0.75rem; color: var(--text-muted); font-size: 13.5px; }
+    .md li { margin-bottom: 0.3rem; line-height: 1.6; }
+    .md table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; font-size: 12.5px; }
+    .md th, .md td { border: 1px solid var(--surface-border); padding: 8px 12px; text-align: left; }
+    .md th { background: var(--surface-light); color: var(--text-title); font-weight: 700; font-size: 12px; }
+    .md pre { background: #0d1b3e; color: #e8f0fb; padding: 16px 20px; border-radius: 3px; overflow-x: auto; margin-bottom: 1rem; font-size: 12px; }
+    .md code { font-family: 'Courier New', monospace; font-size: 12.5px; }
+    .md :not(pre) > code { background: var(--surface-light); color: var(--color-primary); padding: 1px 5px; border-radius: 2px; border: 1px solid var(--surface-border); }
+    .md blockquote { border-left: 3px solid var(--color-primary); padding: 10px 16px; color: var(--color-primary-dark); background: var(--color-primary-light); margin-bottom: 1rem; font-size: 13px; }
+    .md strong { color: var(--text-body); font-weight: 600; }
+
+    /* =========================================================
+       11. FOOTER INSTITUTIONNEL — Multi-colonnes, fond sombre
+       Pattern: ANIP / service-public.bj / DSFR footer
+    ========================================================= */
+    .site-footer {
+      background: var(--footer-bg);
+      color: var(--footer-text);
+      margin-top: auto;
+    }
+    .footer-main {
+      padding: 48px 0 40px;
+      border-bottom: 1px solid var(--footer-border);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+    }
+    /* Colonne 1 : Brand + description */
+    .footer-brand__logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .footer-brand__icon {
+      width: 38px; height: 38px;
+      background: var(--color-primary);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .footer-brand__icon svg { width: 20px; height: 20px; color: #fff; }
+    .footer-brand__name {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--footer-heading);
+      letter-spacing: -0.02em;
+    }
+    .footer-brand__tagline { font-size: 11px; color: var(--footer-text); margin-top: 1px; }
+    .footer-brand__desc {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--footer-text);
+      margin-bottom: 20px;
+    }
+    .footer-brand__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--footer-border);
+      border-radius: 3px;
+      font-size: 11.5px;
+      color: var(--footer-text);
+    }
+    .footer-brand__badge svg { width: 12px; height: 12px; opacity: 0.7; }
+
+    /* Colonnes de liens */
+    .footer-col__title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--footer-heading);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--footer-border);
+    }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--footer-text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: #fff; }
+    .footer-links a svg { width: 13px; height: 13px; opacity: 0.6; flex-shrink: 0; }
+
+    /* Barre de copyright */
+    .footer-bottom {
+      padding: 16px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-bottom__copy {
+      font-size: 12px;
+      color: #4a5e8a;
+    }
+    .footer-bottom__legal {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .footer-bottom__legal a {
+      font-size: 12px;
+      color: #4a5e8a;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .footer-bottom__legal a:hover { color: var(--footer-text); }
+
+    @media (max-width: 900px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .catalogue-controls__top { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* =========================================================
+       NOTIFICATION DE COPIE
+    ========================================================= */
+    .copy-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #15803d;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 4px;
+      font-size: 13.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 9999;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      transform: translateY(80px);
+      opacity: 0;
+      transition: transform 0.25s, opacity 0.25s;
+      pointer-events: none;
+    }
+    .copy-toast.show { transform: translateY(0); opacity: 1; }
+    .copy-toast svg { width: 16px; height: 16px; }
   </style>
 </head>
-<body class="bg-white text-slate-900 min-h-screen flex flex-col font-sans antialiased selection:bg-blue-100 selection:text-blue-900">
+<body>
 
-  <!-- Lien d'évitement accessible (WCAG 2.2 AA) -->
-  <a href="#catalogue" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-700 focus:text-white focus:rounded-lg focus:shadow-xl focus:ring-2 focus:ring-blue-500">
-    Passer au contenu principal
-  </a>
+  <!-- Lien d'évitement (WCAG 2.2 AA) -->
+  <a href="#catalogue" class="skip-link">Passer au contenu principal</a>
 
-  <!-- Header Sobre Classique (Inspiration ANIP / Stripe / ChatGPT Web) -->
-  <header class="border-b border-slate-200 bg-white/95 backdrop-blur sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-blue-700 text-white flex items-center justify-center font-bold text-sm">
-          <!-- Icône vectorielle pure (pas de sticker) -->
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-          </svg>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="font-bold text-base tracking-tight text-slate-900">DevStandard</span>
-          <span class="text-[11px] font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">Web & Mobile</span>
-        </div>
-      </div>
-      <nav class="hidden md:flex items-center gap-6" aria-label="Navigation principale">
-        <a href="#how-it-works" class="text-xs font-semibold text-slate-600 hover:text-slate-900 transition focus-visible:ring-2 focus-visible:ring-blue-600 rounded px-1.5 py-0.5">Comment ça marche ?</a>
-        <a href="#catalogue" class="text-xs font-semibold text-slate-600 hover:text-slate-900 transition focus-visible:ring-2 focus-visible:ring-blue-600 rounded px-1.5 py-0.5">Catalogue des Standards</a>
-        <a href="#compatibility" class="text-xs font-semibold text-slate-600 hover:text-slate-900 transition focus-visible:ring-2 focus-visible:ring-blue-600 rounded px-1.5 py-0.5">Environnements Supportés</a>
-        <a href="#faq" class="text-xs font-semibold text-slate-600 hover:text-slate-900 transition focus-visible:ring-2 focus-visible:ring-blue-600 rounded px-1.5 py-0.5">FAQ</a>
-      </nav>
-      <div class="flex items-center gap-3">
-        <a href="https://github.com/Marilin66/devstandard-skills" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center gap-2 border border-slate-300 transition focus-visible:ring-2 focus-visible:ring-blue-600">
-          <i class="fa-brands fa-github text-sm"></i>
-          <span>GitHub</span>
-        </a>
-      </div>
-    </div>
-  </header>
-
-  <!-- Hero Section Épurée (Fond Blanc Lumineux & Typographie Précise) -->
-  <section class="pt-16 pb-14 border-b border-slate-200 bg-white">
-    <div class="max-w-4xl mx-auto px-4 text-center">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-medium mb-6">
-        <svg class="w-3.5 h-3.5 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-        </svg>
-        Standards d'ingénierie éprouvés pour le Web & le Mobile
-      </div>
-      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-5 leading-tight">
-        Des standards de code humains et rigoureux <br/>
-        <span class="text-blue-700">pour vos assistants IA de développement</span>
-      </h1>
-      <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto mb-8 leading-relaxed">
-        Fini le code généré aux allures de maquette d'IA. Appliquez des règles strictes issues des plateformes d'État (ANIP, e-services, RAVIP, DSFR) et des meilleures pratiques d'ingénierie logicielle.
-      </p>
-
-      <!-- Quick Command Box -->
-      <div class="max-w-2xl mx-auto bg-slate-50 border border-slate-300 rounded-xl p-3 shadow-sm flex items-center justify-between gap-3 text-left">
-        <div class="flex items-center gap-3 overflow-hidden pl-2">
-          <span class="text-slate-500 font-mono text-sm font-bold">$</span>
-          <code id="hero-cmd" class="text-xs sm:text-sm font-mono text-slate-900 truncate select-all">npx github:Marilin66/devstandard-skills add all</code>
-        </div>
-        <button onclick="copyCommand('npx github:Marilin66/devstandard-skills add all', this)" class="shrink-0 px-4 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xs font-semibold flex items-center gap-1.5 transition active:scale-95 shadow-sm focus-visible:ring-2 focus-visible:ring-blue-600">
-          <i class="fa-regular fa-copy"></i>
-          <span>Copier</span>
-        </button>
-      </div>
-
-      <!-- Pack Shortcuts -->
-      <div class="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs">
-        <span class="text-slate-500 font-medium">Installation rapide :</span>
-        <button onclick="copyCommand('npx github:Marilin66/devstandard-skills add frontend-pack', this)" class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition flex items-center gap-1.5 shadow-2xs">
-          <svg class="w-3.5 h-3.5 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-          Pack Frontend
-        </button>
-        <button onclick="copyCommand('npx github:Marilin66/devstandard-skills add backend-pack', this)" class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition flex items-center gap-1.5 shadow-2xs">
-          <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
-          Pack Backend
-        </button>
-        <button onclick="copyCommand('npx github:Marilin66/devstandard-skills list', this)" class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition flex items-center gap-1.5 shadow-2xs">
-          <svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
-          Lister les 14 skills
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Section "Comment ça marche ?" -->
-  <section id="how-it-works" class="py-16 border-b border-slate-200 bg-slate-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center max-w-2xl mx-auto mb-12">
-        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-3">Fonctionnement Universel</h2>
-        <p class="text-slate-600 text-sm">Les skills s'installent dans vos dépôts existants sans modifier votre environnement.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Étape 1 -->
-        <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs">
-          <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 font-bold text-sm flex items-center justify-center mb-4">
-            1
+  <!-- ============================================================
+       1. BARRE D'IDENTITÉ OFFICIELLE
+       Pattern : GOV.UK black bar / DSFR / ANIP top utility bar
+  ============================================================ -->
+  <div class="identity-bar" role="banner">
+    <div class="container">
+      <div class="identity-bar__inner">
+        <div class="identity-bar__brand">
+          <div class="identity-bar__logo" aria-hidden="true">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+            </svg>
           </div>
-          <h3 class="text-base font-bold text-slate-900 mb-2">Exécutez la commande</h3>
-          <p class="text-slate-600 text-xs leading-relaxed">
-            Dans le dossier de votre projet web ou mobile (React, Vue, Next.js, Flutter, React Native, Laravel...), lancez la commande d'installation.
-          </p>
+          <span class="identity-bar__name">DevStandard</span>
+          <span class="identity-bar__separator" aria-hidden="true">|</span>
+          <span class="identity-bar__tagline">Registre Ouvert de Standards d'Ingénierie</span>
         </div>
-
-        <!-- Étape 2 -->
-        <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs">
-          <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 font-bold text-sm flex items-center justify-center mb-4">
-            2
-          </div>
-          <h3 class="text-base font-bold text-slate-900 mb-2">Fichiers autonomes</h3>
-          <p class="text-slate-600 text-xs leading-relaxed">
-            Le standard est téléchargé dans <code class="text-blue-800 font-mono text-[11px] bg-slate-100 px-1 py-0.5 rounded">.agents/skills/&lt;skill&gt;/SKILL.md</code>. Il est versionné avec votre code dans Git.
-          </p>
+        <div class="identity-bar__links" aria-label="Liens utiles">
+          <a href="https://github.com/Marilin66/devstandard-skills" target="_blank" rel="noopener noreferrer">
+            <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844a9.59 9.59 0 012.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+            GitHub
+          </a>
+          <a href="#faq">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Aide
+          </a>
         </div>
-
-        <!-- Étape 3 -->
-        <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs">
-          <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 font-bold text-sm flex items-center justify-center mb-4">
-            3
-          </div>
-          <h3 class="text-base font-bold text-slate-900 mb-2">L'IA applique les règles</h3>
-          <p class="text-slate-600 text-xs leading-relaxed">
-            Votre assistant IA (Antigravity, Cursor, Claude Code, Codex) lit nativement ces règles et génère des interfaces sobres et du code sécurisé.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Catalogue Section -->
-  <main id="catalogue" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 flex-1 w-full bg-white">
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
-      <div>
-        <h2 class="text-2xl font-bold text-slate-900">Catalogue des 14 Standards</h2>
-        <p class="text-slate-500 text-xs mt-0.5">Standards d'architecture, design épuré, accessibilité et sécurité.</p>
-      </div>
-
-      <!-- Controls (Recherche + Filtres) -->
-      <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-        <!-- Champ de recherche -->
-        <div class="relative w-full sm:w-64">
-          <label for="search-input" class="sr-only">Rechercher un standard</label>
-          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs" aria-hidden="true"></i>
-          <input 
-            id="search-input" 
-            name="search"
-            type="search" 
-            autocomplete="off"
-            placeholder="Rechercher (ex: tokens, a11y, sql)..." 
-            class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition min-h-[38px]"
-          >
-        </div>
-
-        <!-- Onglets de domaines -->
-        <div class="flex items-center gap-1 p-1 bg-slate-100 rounded-lg border border-slate-200 text-xs w-full sm:w-auto overflow-x-auto" role="tablist">
-          <button onclick="filterDomain('all')" class="domain-tab active px-3 py-1.5 rounded-md font-medium transition bg-white text-slate-900 shadow-2xs" data-domain="all" role="tab" aria-selected="true">
-            Tous (<span id="count-all">0</span>)
-          </button>
-          <button onclick="filterDomain('frontend')" class="domain-tab px-3 py-1.5 rounded-md font-medium text-slate-600 hover:text-slate-900 transition" data-domain="frontend" role="tab" aria-selected="false">
-            Frontend (<span id="count-frontend">0</span>)
-          </button>
-          <button onclick="filterDomain('backend')" class="domain-tab px-3 py-1.5 rounded-md font-medium text-slate-600 hover:text-slate-900 transition" data-domain="backend" role="tab" aria-selected="false">
-            Backend (<span id="count-backend">0</span>)
-          </button>
-          <button onclick="filterDomain('engineering')" class="domain-tab px-3 py-1.5 rounded-md font-medium text-slate-600 hover:text-slate-900 transition" data-domain="engineering" role="tab" aria-selected="false">
-            Qualité (<span id="count-engineering">0</span>)
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Grille des Cartes -->
-    <div id="skills-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <!-- Injecté dynamiquement par JavaScript -->
-    </div>
-  </main>
-
-  <!-- Compatibilité Multi-Plateformes -->
-  <section id="compatibility" class="py-14 border-t border-slate-200 bg-slate-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center max-w-2xl mx-auto mb-10">
-        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mb-2">Compatibilité Éprouvée Web & Mobile</h2>
-        <p class="text-slate-600 text-xs">Standards exploitables par les principaux agents et environnements de développement.</p>
-      </div>
-
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 text-center">
-        <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-2xs">
-          <i class="fa-solid fa-robot text-xl text-slate-700 mb-2 block" aria-hidden="true"></i>
-          <h3 class="font-bold text-xs text-slate-900 mb-1">Antigravity</h3>
-          <span class="text-[10px] text-emerald-800 font-medium bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Natif</span>
-        </div>
-        <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-2xs">
-          <i class="fa-solid fa-i-cursor text-xl text-slate-700 mb-2 block" aria-hidden="true"></i>
-          <h3 class="font-bold text-xs text-slate-900 mb-1">Cursor</h3>
-          <span class="text-[10px] text-emerald-800 font-medium bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Rules & Skills</span>
-        </div>
-        <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-2xs">
-          <i class="fa-solid fa-brain text-xl text-slate-700 mb-2 block" aria-hidden="true"></i>
-          <h3 class="font-bold text-xs text-slate-900 mb-1">Claude Code</h3>
-          <span class="text-[10px] text-emerald-800 font-medium bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Agent Skills</span>
-        </div>
-        <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-2xs">
-          <i class="fa-solid fa-code text-xl text-slate-700 mb-2 block" aria-hidden="true"></i>
-          <h3 class="font-bold text-xs text-slate-900 mb-1">OpenCode</h3>
-          <span class="text-[10px] text-emerald-800 font-medium bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Standard</span>
-        </div>
-        <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-2xs">
-          <i class="fa-solid fa-terminal text-xl text-slate-700 mb-2 block" aria-hidden="true"></i>
-          <h3 class="font-bold text-xs text-slate-900 mb-1">OpenAI Codex</h3>
-          <span class="text-[10px] text-emerald-800 font-medium bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">AGENTS.md</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ Section -->
-  <section id="faq" class="py-14 border-t border-slate-200 bg-white">
-    <div class="max-w-3xl mx-auto px-4">
-      <div class="text-center mb-10">
-        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mb-2">Foire Aux Questions</h2>
-        <p class="text-slate-600 text-xs">Principes et utilisation de DevStandard.</p>
-      </div>
-
-      <div class="space-y-4">
-        <div class="border border-slate-200 rounded-xl p-5 bg-slate-50/50">
-          <h3 class="font-bold text-sm text-slate-900 mb-1">Pourquoi pas de fond sombre violet ou d'effets visuels IA ?</h3>
-          <p class="text-slate-600 text-xs leading-relaxed">
-            Les dégradés violets et néons sont des marqueurs typiques du contenu généré artificiellement sans considération ergonomique. Les portails d'État (ANIP, RAVIP, service-public.bj), les applications bancaires et les produits d'envergure utilisent un <strong>fond blanc ou très clair</strong> et des <strong>icônes vectorielles sobres</strong> pour maximiser la confiance, la lisibilité et le confort visuel.
-          </p>
-        </div>
-
-        <div class="border border-slate-200 rounded-xl p-5 bg-slate-50/50">
-          <h3 class="font-bold text-sm text-slate-900 mb-1">Est-ce compatible avec les applications mobiles (React Native, Flutter, Swift, Kotlin) ?</h3>
-          <p class="text-slate-600 text-xs leading-relaxed">
-            <strong>Oui, absolument.</strong> Les skills intègrent les spécifications pour mobiles : cibles tactiles de 44x44pt (iOS) et 48x48dp (Android), gestion des zones sûres (*Safe Areas*), et composants adaptés à une manipulation à une main (*Bottom Sheets*).
-          </p>
-        </div>
-
-        <div class="border border-slate-200 rounded-xl p-5 bg-slate-50/50">
-          <h3 class="font-bold text-sm text-slate-900 mb-1">Dois-je commiter le dossier .agents/skills/ dans mon dépôt Git ?</h3>
-          <p class="text-slate-600 text-xs leading-relaxed">
-            <strong>Oui.</strong> Commiter ces fichiers garantit que n'importe quel développeur ou n'importe quelle IA intervenant sur le projet respectera strictement la même charte d'ingénierie.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Modale de Lecture Accessible (WCAG 2.2 AA avec Focus Trap) -->
-  <div 
-    id="skill-modal" 
-    role="dialog" 
-    aria-modal="true" 
-    aria-labelledby="modal-title" 
-    class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-4 sm:p-6"
-  >
-    <div class="bg-white border border-slate-300 rounded-2xl max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-      <!-- En-tête de la modale -->
-      <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-        <div>
-          <span id="modal-domain" class="text-[10px] font-bold uppercase tracking-wider text-blue-700">FRONTEND</span>
-          <h2 id="modal-title" class="text-base font-bold text-slate-900">Titre du Standard</h2>
-        </div>
-        <button id="modal-close-btn" onclick="closeModal()" aria-label="Fermer la boîte de dialogue" class="w-8 h-8 rounded-lg bg-white hover:bg-slate-100 text-slate-500 hover:text-slate-900 flex items-center justify-center border border-slate-200 transition focus-visible:ring-2 focus-visible:ring-blue-600">
-          <i class="fa-solid fa-xmark text-sm" aria-hidden="true"></i>
-        </button>
-      </div>
-
-      <!-- Bannière de commande d'installation -->
-      <div class="px-5 py-3 bg-slate-100 border-b border-slate-200 flex items-center justify-between gap-3">
-        <code id="modal-command" class="text-xs font-mono text-slate-800 truncate">npx github:Marilin66/devstandard-skills add ...</code>
-        <button id="modal-copy-btn" class="px-3 py-1.5 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xs font-semibold shrink-0 transition flex items-center gap-1.5 shadow-2xs focus-visible:ring-2 focus-visible:ring-blue-600">
-          <i class="fa-regular fa-copy" aria-hidden="true"></i>
-          <span>Copier</span>
-        </button>
-      </div>
-
-      <!-- Contenu Markdown du Standard -->
-      <div id="modal-content" class="p-6 overflow-y-auto markdown-body text-slate-700 text-xs sm:text-sm leading-relaxed flex-1">
-        <!-- Rendu markdown injecté ici -->
       </div>
     </div>
   </div>
 
-  <!-- Footer Sobre -->
-  <footer class="border-t border-slate-200 bg-slate-50 py-8 text-center text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <p>© 2026 DevStandard — Registre ouvert d'ingénierie logicielle pour applications Web et Mobiles.</p>
-      <div class="flex items-center gap-5 font-medium">
-        <a href="https://github.com/Marilin66/devstandard-skills" target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 transition">Dépôt GitHub</a>
-        <a href="#how-it-works" class="hover:text-slate-900 transition">Guide</a>
-        <a href="#catalogue" class="hover:text-slate-900 transition">14 Standards</a>
+  <!-- ============================================================
+       2. HEADER PRINCIPAL STICKY
+  ============================================================ -->
+  <header class="site-header" role="banner">
+    <div class="container">
+      <div class="site-header__inner">
+
+        <!-- Logo + nom du service -->
+        <a href="/" class="site-header__brand" aria-label="DevStandard — Accueil">
+          <div class="site-header__icon" aria-hidden="true">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
+          </div>
+          <div class="site-header__title-block">
+            <div class="site-header__title">DevStandard</div>
+            <div class="site-header__subtitle">Standards Web &amp; Mobile pour IA</div>
+          </div>
+        </a>
+
+        <!-- Navigation principale (desktop) -->
+        <nav class="site-nav" aria-label="Navigation principale">
+          <a href="#how-it-works" class="site-nav__link">Fonctionnement</a>
+          <a href="#catalogue" class="site-nav__link">Catalogue</a>
+          <a href="#compatibility" class="site-nav__link">Compatibilité</a>
+          <a href="#faq" class="site-nav__link">FAQ</a>
+        </nav>
+
+        <!-- Actions -->
+        <div class="site-header__actions">
+          <a href="https://github.com/Marilin66/devstandard-skills" target="_blank" rel="noopener noreferrer" class="btn-github" aria-label="Voir le dépôt GitHub">
+            <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844a9.59 9.59 0 012.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+            <span>GitHub</span>
+          </a>
+          <button class="mobile-menu-btn" aria-label="Ouvrir le menu" aria-expanded="false">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <!-- ============================================================
+         3. HERO — Bannière institutionnelle fond bleu solide
+         Pattern : DSFR hero / service-public.fr / ANIP
+    ============================================================ -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero__inner">
+          <div class="hero__badge" aria-label="Version stable">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            Registre ouvert — v1.0 stable
+          </div>
+
+          <h1 class="hero__title" id="hero-title">
+            Des standards d'ingénierie <em>rigoureux</em><br>
+            pour vos assistants IA de développement
+          </h1>
+
+          <p class="hero__description">
+            Installez en une commande les règles d'architecture, de design institutionnel, de sécurité et d'accessibilité WCAG 2.2 AA directement dans vos projets web et mobiles. Compatible React Native, Flutter, Next.js, Laravel et plus.
+          </p>
+
+          <!-- Commande principale -->
+          <div class="hero__command-block">
+            <div class="hero__command-label">Installation complète (14 standards)</div>
+            <div class="hero__command-box" role="group" aria-label="Commande d'installation">
+              <span class="hero__command-prefix" aria-hidden="true">$</span>
+              <span class="hero__command-text" id="hero-cmd" aria-label="Commande : npx github:Marilin66/devstandard-skills add all">npx github:Marilin66/devstandard-skills add all</span>
+              <button class="hero__command-copy" onclick="copyCmd('npx github:Marilin66/devstandard-skills add all')" aria-label="Copier la commande d'installation complète">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </svg>
+                Copier la commande
+              </button>
+            </div>
+          </div>
+
+          <!-- Raccourcis packs -->
+          <div class="hero__packs" role="group" aria-label="Raccourcis d'installation par pack">
+            <button class="pack-btn" onclick="copyCmd('npx github:Marilin66/devstandard-skills add frontend-pack')" aria-label="Copier la commande du pack frontend">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+              </svg>
+              Pack Frontend
+            </button>
+            <button class="pack-btn" onclick="copyCmd('npx github:Marilin66/devstandard-skills add backend-pack')" aria-label="Copier la commande du pack backend">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/>
+              </svg>
+              Pack Backend
+            </button>
+            <button class="pack-btn" onclick="copyCmd('npx github:Marilin66/devstandard-skills add engineering-pack')" aria-label="Copier la commande du pack qualité">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              Pack Qualité
+            </button>
+            <button class="pack-btn" onclick="copyCmd('npx github:Marilin66/devstandard-skills list')" aria-label="Copier la commande pour lister les standards">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+              </svg>
+              Lister les 14 standards
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         4. BARRE DE STATISTIQUES INSTITUTIONNELLE
+         Pattern : chiffres clés en grille, bordures
+    ============================================================ -->
+    <div class="stats-bar" aria-label="Chiffres clés">
+      <div class="container" style="padding: 0;">
+        <div class="stats-bar__inner">
+          <div class="stat-item">
+            <div class="stat-item__icon" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+              </svg>
+            </div>
+            <div>
+              <div class="stat-item__value">14</div>
+              <div class="stat-item__label">Standards disponibles</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-item__icon" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="stat-item__value">3</div>
+              <div class="stat-item__label">Domaines couverts</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-item__icon" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="stat-item__value">5+</div>
+              <div class="stat-item__label">Agents compatibles</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-item__icon" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="stat-item__value">100%</div>
+              <div class="stat-item__label">Gratuit &amp; open source</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         5. SECTION : FONCTIONNEMENT
+         Pattern : 3 étapes numérotées, grille avec bordures
+    ============================================================ -->
+    <section id="how-it-works" class="section section--light section--bordered" aria-labelledby="how-title">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-eyebrow">Guide de démarrage</div>
+          <h2 class="section-title" id="how-title">Fonctionnement en 3 étapes</h2>
+          <p class="section-desc">Les standards s'installent dans vos projets existants sans modifier votre environnement ni vos dépendances.</p>
+        </div>
+        <div class="steps-grid">
+          <div class="step-item">
+            <div class="step-number" aria-hidden="true">1</div>
+            <h3 class="step-title">Exécutez la commande dans votre projet</h3>
+            <p class="step-desc">
+              Dans le dossier de votre projet (React, Vue, Next.js, Flutter, React Native, Laravel…), exécutez la commande <code>npx github:Marilin66/devstandard-skills add &lt;nom&gt;</code>. Aucune installation globale requise.
+            </p>
+          </div>
+          <div class="step-item">
+            <div class="step-number" aria-hidden="true">2</div>
+            <h3 class="step-title">Le fichier SKILL.md est téléchargé</h3>
+            <p class="step-desc">
+              Le standard est déposé dans <code>.agents/skills/&lt;skill&gt;/SKILL.md</code> — un simple fichier Markdown versionné avec votre code Git. Aucune base de données, aucun serveur, aucun abonnement.
+            </p>
+          </div>
+          <div class="step-item">
+            <div class="step-number" aria-hidden="true">3</div>
+            <h3 class="step-title">L'IA applique les règles automatiquement</h3>
+            <p class="step-desc">
+              Votre assistant IA (Antigravity, Cursor, Claude Code, Codex) lit nativement ces règles et génère des interfaces sobres, du code sécurisé et des architectures robustes conformes aux standards institutionnels.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         6. CATALOGUE DES STANDARDS
+         Pattern : grille de cartes avec bordures, filtres institutionnels
+    ============================================================ -->
+    <section id="catalogue" class="section section--white" aria-labelledby="catalogue-title">
+      <div class="container">
+        <div class="catalogue-controls">
+          <div class="catalogue-controls__top">
+            <div>
+              <h2 class="catalogue-title" id="catalogue-title">Catalogue des Standards</h2>
+              <p class="catalogue-subtitle">Standards d'architecture, de design institutionnel, d'accessibilité et de sécurité.</p>
+            </div>
+            <label class="sr-only" for="search-input">Rechercher un standard</label>
+            <div class="search-field">
+              <svg class="search-field__icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              <input
+                id="search-input"
+                type="search"
+                autocomplete="off"
+                placeholder="Rechercher (tokens, sécurité, a11y…)"
+                class="search-field__input"
+              >
+            </div>
+          </div>
+
+          <div class="domain-tabs" role="tablist" aria-label="Filtrer par domaine">
+            <button class="domain-tab active" data-domain="all" role="tab" aria-selected="true" onclick="filterDomain('all')">
+              Tous (<span id="cnt-all">0</span>)
+            </button>
+            <button class="domain-tab" data-domain="frontend" role="tab" aria-selected="false" onclick="filterDomain('frontend')">
+              Frontend (<span id="cnt-frontend">0</span>)
+            </button>
+            <button class="domain-tab" data-domain="backend" role="tab" aria-selected="false" onclick="filterDomain('backend')">
+              Backend (<span id="cnt-backend">0</span>)
+            </button>
+            <button class="domain-tab" data-domain="engineering" role="tab" aria-selected="false" onclick="filterDomain('engineering')">
+              Qualité (<span id="cnt-engineering">0</span>)
+            </button>
+          </div>
+        </div>
+
+        <div id="skills-grid" class="skills-grid" role="list" aria-live="polite" aria-label="Liste des standards">
+          <!-- Injecté dynamiquement -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         7. SECTION COMPATIBILITÉ
+         Pattern : grille uniforme style tableau institutionnel
+    ============================================================ -->
+    <section id="compatibility" class="section section--light section--bordered" aria-labelledby="compat-title">
+      <div class="container">
+        <div class="section-header section-header--centered">
+          <div class="section-eyebrow">Agents &amp; Environnements</div>
+          <h2 class="section-title" id="compat-title">Compatibilité éprouvée Web &amp; Mobile</h2>
+          <p class="section-desc">Standards exploitables par les principaux agents de développement IA et environnements de production.</p>
+        </div>
+        <div class="compat-grid">
+          <div class="compat-item">
+            <div class="compat-item__icon" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <div class="compat-item__name">Antigravity</div>
+            <span class="compat-badge">Natif</span>
+          </div>
+          <div class="compat-item">
+            <div class="compat-item__icon" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+              </svg>
+            </div>
+            <div class="compat-item__name">Cursor</div>
+            <span class="compat-badge">Rules</span>
+          </div>
+          <div class="compat-item">
+            <div class="compat-item__icon" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <div class="compat-item__name">Claude Code</div>
+            <span class="compat-badge">CLAUDE.md</span>
+          </div>
+          <div class="compat-item">
+            <div class="compat-item__icon" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+              </svg>
+            </div>
+            <div class="compat-item__name">OpenCode</div>
+            <span class="compat-badge">Standard</span>
+          </div>
+          <div class="compat-item">
+            <div class="compat-item__icon" aria-hidden="true">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+              </svg>
+            </div>
+            <div class="compat-item__name">Codex CLI</div>
+            <span class="compat-badge">AGENTS.md</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         8. FAQ — Accordéon style institutionnel
+         Pattern : liste avec bordures, expand/collapse
+    ============================================================ -->
+    <section id="faq" class="section section--white" aria-labelledby="faq-title">
+      <div class="container" style="max-width: 800px;">
+        <div class="section-header">
+          <div class="section-eyebrow">Questions fréquentes</div>
+          <h2 class="section-title" id="faq-title">Foire Aux Questions</h2>
+          <p class="section-desc">Principes, utilisation et philosophie de DevStandard.</p>
+        </div>
+        <div class="faq-list" role="list">
+
+          <div class="faq-item" role="listitem">
+            <button class="faq-question" aria-expanded="false" aria-controls="faq-a1" onclick="toggleFaq(this)">
+              Pourquoi des standards institutionnels et pas simplement des règles génériques ?
+              <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div class="faq-answer" id="faq-a1" role="region">
+              Les portails d'État (ANIP Bénin, RAVIP, service-public.fr, GOV.UK, USWDS) et les applications bancaires de référence ont résolu, au fil des années, les problèmes d'accessibilité, de lisibilité, de sécurité et de confiance utilisateur. Leurs patterns sont éprouvés, audités et conformes à des réglementations strictes (RGAA, WCAG 2.2 AA, Section 508). <strong>Appliquer ces standards garantit des interfaces crédibles, sobres et immédiatement dignes de production</strong> — loin du « design IA générique » aux dégradés violets.
+            </div>
+          </div>
+
+          <div class="faq-item" role="listitem">
+            <button class="faq-question" aria-expanded="false" aria-controls="faq-a2" onclick="toggleFaq(this)">
+              Est-ce compatible avec les applications mobiles (React Native, Flutter, Swift, Kotlin) ?
+              <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div class="faq-answer" id="faq-a2" role="region">
+              <strong>Oui, intégralement.</strong> Les standards intègrent les spécifications natives mobiles : cibles tactiles de 44×44pt (iOS HIG) et 48×48dp (Android Material), gestion des <em>Safe Areas</em> et encoches, navigation par <em>Bottom Tab Bar</em>, <em>Bottom Sheets</em> contextuals, et taille minimale de 16px sur les champs de saisie pour éviter le zoom involontaire sur iOS. Les skills sont agnostiques au framework.
+            </div>
+          </div>
+
+          <div class="faq-item" role="listitem">
+            <button class="faq-question" aria-expanded="false" aria-controls="faq-a3" onclick="toggleFaq(this)">
+              Dois-je commiter le dossier <code>.agents/skills/</code> dans mon dépôt Git ?
+              <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div class="faq-answer" id="faq-a3" role="region">
+              <strong>Oui.</strong> C'est l'essence même du projet. En committant ces fichiers, vous garantissez que chaque développeur et chaque IA intervenant sur le projet appliqueront strictement la même charte d'ingénierie. Ces fichiers Markdown sont légers, lisibles par les humains et versionnés comme n'importe quel fichier de configuration.
+            </div>
+          </div>
+
+          <div class="faq-item" role="listitem">
+            <button class="faq-question" aria-expanded="false" aria-controls="faq-a4" onclick="toggleFaq(this)">
+              Y a-t-il un abonnement, un compte ou une base de données ?
+              <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div class="faq-answer" id="faq-a4" role="region">
+              <strong>Non.</strong> DevStandard est entièrement gratuit, sans compte, sans base de données et sans serveur. Les standards sont de simples fichiers Markdown hébergés sur GitHub. La commande <code>npx github:Marilin66/devstandard-skills add &lt;skill&gt;</code> télécharge directement le fichier depuis le dépôt public — c'est tout.
+            </div>
+          </div>
+
+          <div class="faq-item" role="listitem">
+            <button class="faq-question" aria-expanded="false" aria-controls="faq-a5" onclick="toggleFaq(this)">
+              Comment contribuer ou proposer un nouveau standard ?
+              <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div class="faq-answer" id="faq-a5" role="region">
+              Ouvrez une <em>Pull Request</em> sur <a href="https://github.com/Marilin66/devstandard-skills" target="_blank" rel="noopener noreferrer" style="color: var(--color-primary); font-weight: 600;">github.com/Marilin66/devstandard-skills</a> avec votre nouveau fichier <code>SKILL.md</code> dans le dossier approprié (<code>skills/frontend/</code>, <code>skills/backend/</code> ou <code>skills/engineering/</code>). Chaque standard doit inclure un frontmatter YAML, une description précise, des exemples de code et une checklist de validation.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       9. FOOTER INSTITUTIONNEL MULTI-COLONNES
+       Pattern : ANIP / service-public.bj / DSFR footer
+       Fond sombre navy, 4 colonnes, mentions légales obligatoires
+  ============================================================ -->
+  <footer class="site-footer" aria-label="Pied de page">
+    <div class="footer-main">
+      <div class="container">
+        <div class="footer-grid">
+
+          <!-- Colonne 1 : Brand + description -->
+          <div>
+            <div class="footer-brand__logo">
+              <div class="footer-brand__icon" aria-hidden="true">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                </svg>
+              </div>
+              <div>
+                <div class="footer-brand__name">DevStandard</div>
+                <div class="footer-brand__tagline">Registre Ouvert de Standards d'Ingénierie</div>
+              </div>
+            </div>
+            <p class="footer-brand__desc">
+              DevStandard fournit des standards d'ingénierie logicielle librement utilisables pour vos assistants IA. Design institutionnel, sécurité renforcée, accessibilité WCAG 2.2 AA et compatibilité mobile native (iOS &amp; Android).
+            </p>
+            <div class="footer-brand__badge">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              </svg>
+              Open Source — Licence MIT
+            </div>
+          </div>
+
+          <!-- Colonne 2 : Navigation -->
+          <div>
+            <h3 class="footer-col__title">Navigation</h3>
+            <ul class="footer-links">
+              <li>
+                <a href="#how-it-works">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                  Fonctionnement
+                </a>
+              </li>
+              <li>
+                <a href="#catalogue">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                  Catalogue des standards
+                </a>
+              </li>
+              <li>
+                <a href="#compatibility">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                  Compatibilité
+                </a>
+              </li>
+              <li>
+                <a href="#faq">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                  FAQ
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Colonne 3 : Ressources -->
+          <div>
+            <h3 class="footer-col__title">Ressources</h3>
+            <ul class="footer-links">
+              <li>
+                <a href="https://github.com/Marilin66/devstandard-skills" target="_blank" rel="noopener noreferrer">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                  Dépôt GitHub (Skills)
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/Marilin66/devstandard-site" target="_blank" rel="noopener noreferrer">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                  Dépôt GitHub (Site)
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/Marilin66/devstandard-skills/blob/main/README.md" target="_blank" rel="noopener noreferrer">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  Documentation
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/Marilin66/devstandard-skills/issues" target="_blank" rel="noopener noreferrer">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                  Signaler un problème
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Colonne 4 : Mentions légales -->
+          <div>
+            <h3 class="footer-col__title">Informations</h3>
+            <ul class="footer-links">
+              <li>
+                <a href="#">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                  Accessibilité : conforme WCAG 2.2 AA
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                  Mentions légales
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                  Politique de confidentialité
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                  Gestion des cookies
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Barre de copyright -->
+    <div class="container">
+      <div class="footer-bottom">
+        <p class="footer-bottom__copy">
+          © 2026 DevStandard — Registre ouvert d'ingénierie logicielle. Distribué sous Licence MIT.
+        </p>
+        <nav class="footer-bottom__legal" aria-label="Liens légaux">
+          <a href="#">Accessibilité</a>
+          <a href="#">Mentions légales</a>
+          <a href="#">Confidentialité</a>
+          <a href="https://github.com/Marilin66/devstandard-skills" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </nav>
       </div>
     </div>
   </footer>
 
-  <script>
-    const GITHUB_REPO_RAW = "https://raw.githubusercontent.com/Marilin66/devstandard-skills/main";
-    let registryData = null;
-    let activeFilter = 'all';
-    let lastFocusedElement = null;
+  <!-- ============================================================
+       MODALE DE LECTURE DU STANDARD
+  ============================================================ -->
+  <div
+    id="skill-modal"
+    class="modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+  >
+    <div class="modal">
+      <div class="modal__domain-bar">
+        <span id="modal-domain">FRONTEND</span>
+        <button class="modal__close-btn" id="modal-close-btn" onclick="closeModal()" aria-label="Fermer la fenêtre">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal__header">
+        <h2 class="modal__title" id="modal-title">Standard</h2>
+      </div>
+      <div class="modal__command-bar">
+        <code class="modal__command-code" id="modal-command">npx github:Marilin66/devstandard-skills add …</code>
+        <button class="modal__copy-btn" id="modal-copy-btn" aria-label="Copier la commande d'installation">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+          </svg>
+          Copier
+        </button>
+      </div>
+      <div id="modal-content" class="modal__content md">
+        <!-- Contenu Markdown injecté ici -->
+      </div>
+    </div>
+  </div>
 
-    async function initApp() {
+  <!-- Toast de confirmation de copie -->
+  <div class="copy-toast" id="copy-toast" role="status" aria-live="polite" aria-atomic="true">
+    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+    </svg>
+    Commande copiée !
+  </div>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    const GITHUB_RAW = 'https://raw.githubusercontent.com/Marilin66/devstandard-skills/main';
+    let registry = null;
+    let activeFilter = 'all';
+    let lastFocus = null;
+
+    /* ---- Chargement du registre ---- */
+    async function init() {
       try {
         let res = await fetch('./registry.json');
-        if (!res.ok) {
-          res = await fetch(`${GITHUB_REPO_RAW}/registry.json`);
-        }
-        registryData = await res.json();
+        if (!res.ok) res = await fetch(GITHUB_RAW + '/registry.json');
+        registry = await res.json();
         renderSkills();
-      } catch (err) {
-        console.error("Erreur de chargement du registre :", err);
+      } catch (e) {
+        console.error('Erreur registre :', e);
       }
     }
 
+    /* ---- Rendu de la grille de cartes ---- */
     function renderSkills() {
-      if (!registryData) return;
+      if (!registry) return;
       const query = document.getElementById('search-input').value.toLowerCase().trim();
-      const grid = document.getElementById('skills-grid');
+      const grid  = document.getElementById('skills-grid');
       grid.innerHTML = '';
 
-      let filtered = registryData.skills.filter(skill => {
-        const matchesDomain = activeFilter === 'all' || skill.domain === activeFilter;
-        const matchesQuery = !query || 
-          skill.name.toLowerCase().includes(query) ||
-          skill.title.toLowerCase().includes(query) ||
-          skill.description.toLowerCase().includes(query) ||
-          (skill.tags && skill.tags.some(t => t.toLowerCase().includes(query)));
-        return matchesDomain && matchesQuery;
+      const filtered = registry.skills.filter(s => {
+        const domainOk = activeFilter === 'all' || s.domain === activeFilter;
+        const queryOk  = !query ||
+          s.name.toLowerCase().includes(query) ||
+          s.title.toLowerCase().includes(query) ||
+          s.description.toLowerCase().includes(query) ||
+          (s.tags && s.tags.some(t => t.toLowerCase().includes(query)));
+        return domainOk && queryOk;
       });
 
-      // Compteurs
-      document.getElementById('count-all').innerText = registryData.skills.length;
-      document.getElementById('count-frontend').innerText = registryData.skills.filter(s => s.domain === 'frontend').length;
-      document.getElementById('count-backend').innerText = registryData.skills.filter(s => s.domain === 'backend').length;
-      document.getElementById('count-engineering').innerText = registryData.skills.filter(s => s.domain === 'engineering').length;
+      /* Compteurs */
+      document.getElementById('cnt-all').textContent       = registry.skills.length;
+      document.getElementById('cnt-frontend').textContent  = registry.skills.filter(s => s.domain === 'frontend').length;
+      document.getElementById('cnt-backend').textContent   = registry.skills.filter(s => s.domain === 'backend').length;
+      document.getElementById('cnt-engineering').textContent = registry.skills.filter(s => s.domain === 'engineering').length;
 
       if (filtered.length === 0) {
         grid.innerHTML = `
-          <div class="col-span-full py-12 text-center text-slate-500 bg-slate-50 rounded-xl border border-slate-200">
-            <svg class="w-8 h-8 mx-auto mb-2 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            Aucun standard ne correspond à votre recherche "${query}".
-          </div>
-        `;
+          <div class="no-results">
+            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            Aucun standard ne correspond à « ${query} ».
+          </div>`;
         return;
       }
 
+      const badgeClass = {
+        frontend: 'badge-frontend',
+        backend: 'badge-backend',
+        engineering: 'badge-engineering'
+      };
+      const badgeLabel = { frontend: 'Frontend', backend: 'Backend', engineering: 'Qualité' };
+
       for (const skill of filtered) {
-        const domainMeta = {
-          frontend: { badge: 'bg-blue-50 text-blue-800 border-blue-200', label: 'Frontend' },
-          backend: { badge: 'bg-emerald-50 text-emerald-800 border-emerald-200', label: 'Backend' },
-          engineering: { badge: 'bg-slate-100 text-slate-800 border-slate-200', label: 'Qualité' }
-        }[skill.domain] || { badge: 'bg-slate-100 text-slate-800 border-slate-200', label: skill.domain };
-
-        const card = document.createElement('div');
-        card.className = "bg-white border border-slate-200 rounded-xl p-5 hover:border-slate-300 hover:shadow-md transition flex flex-col justify-between group";
-
+        const card = document.createElement('article');
+        card.className = 'skill-card';
+        card.setAttribute('role', 'listitem');
+        card.setAttribute('tabindex', '0');
+        card.addEventListener('keydown', e => { if (e.key === 'Enter') openModal(skill.name); });
         card.innerHTML = `
-          <div>
-            <div class="flex items-center justify-between gap-2 mb-3">
-              <span class="text-[11px] font-semibold px-2 py-0.5 rounded border ${domainMeta.badge}">
-                ${domainMeta.label}
-              </span>
-              <span class="text-[11px] font-mono text-slate-400">${skill.name}</span>
-            </div>
-
-            <h3 class="font-bold text-slate-900 text-sm mb-1.5 group-hover:text-blue-700 transition cursor-pointer" onclick="openSkillModal('${skill.name}')">
-              ${skill.title}
-            </h3>
-            
-            <p class="text-slate-600 text-xs leading-relaxed mb-4 line-clamp-3">
-              ${skill.description}
-            </p>
-
-            <div class="flex flex-wrap gap-1 mb-4">
-              ${(skill.tags || []).slice(0, 3).map(tag => `
-                <span class="text-[10px] bg-slate-50 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200">#${tag}</span>
-              `).join('')}
-            </div>
+          <div class="skill-card__header">
+            <span class="skill-card__domain-badge ${badgeClass[skill.domain] || 'badge-engineering'}">
+              ${badgeLabel[skill.domain] || skill.domain}
+            </span>
+            <span class="skill-card__name">${skill.name}</span>
           </div>
-
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-            <button onclick="openSkillModal('${skill.name}')" class="text-xs font-semibold text-slate-700 hover:text-blue-700 transition flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-blue-600 rounded p-1">
-              <span>Consulter</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-            </button>
-            <button onclick="copyCommand('npx github:Marilin66/devstandard-skills add ${skill.name}', this)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-medium transition flex items-center gap-1.5 active:scale-95 border border-slate-200 focus-visible:ring-2 focus-visible:ring-blue-600">
-              <i class="fa-regular fa-copy text-[11px]" aria-hidden="true"></i>
-              <span>Installer</span>
-            </button>
+          <h3 class="skill-card__title">${skill.title}</h3>
+          <p class="skill-card__desc">${skill.description}</p>
+          <div class="skill-card__tags">
+            ${(skill.tags || []).slice(0,4).map(t => `<span class="skill-tag">#${t}</span>`).join('')}
           </div>
-        `;
+          <div class="skill-card__footer">
+            <button class="btn-read" onclick="openModal('${skill.name}')" aria-label="Consulter le standard ${skill.title}">
+              Consulter
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+            <button class="btn-install" onclick="copyCmd('npx github:Marilin66/devstandard-skills add ${skill.name}')" aria-label="Copier la commande d'installation de ${skill.title}">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+              </svg>
+              Installer
+            </button>
+          </div>`;
         grid.appendChild(card);
       }
     }
 
+    /* ---- Filtre de domaine ---- */
     function filterDomain(domain) {
       activeFilter = domain;
       document.querySelectorAll('.domain-tab').forEach(btn => {
-        const isMatch = btn.getAttribute('data-domain') === domain;
-        btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
-        if (isMatch) {
-          btn.className = 'domain-tab active px-3 py-1.5 rounded-md font-medium transition bg-white text-slate-900 shadow-2xs';
-        } else {
-          btn.className = 'domain-tab px-3 py-1.5 rounded-md font-medium text-slate-600 hover:text-slate-900 transition';
-        }
+        const match = btn.getAttribute('data-domain') === domain;
+        btn.setAttribute('aria-selected', match ? 'true' : 'false');
+        btn.className = 'domain-tab' + (match ? ' active' : '');
       });
       renderSkills();
     }
 
     document.getElementById('search-input').addEventListener('input', renderSkills);
 
-    async function openSkillModal(skillName) {
-      lastFocusedElement = document.activeElement;
-      const skill = registryData.skills.find(s => s.name === skillName);
+    /* ---- Modale de lecture ---- */
+    async function openModal(skillName) {
+      if (!registry) return;
+      const skill = registry.skills.find(s => s.name === skillName);
       if (!skill) return;
 
-      document.getElementById('modal-domain').innerText = skill.domain;
-      document.getElementById('modal-title').innerText = skill.title;
+      lastFocus = document.activeElement;
+      document.getElementById('modal-domain').textContent  = (skill.domain || 'standard').toUpperCase();
+      document.getElementById('modal-title').textContent   = skill.title;
       const cmd = `npx github:Marilin66/devstandard-skills add ${skill.name}`;
-      document.getElementById('modal-command').innerText = cmd;
-      document.getElementById('modal-copy-btn').onclick = function() { copyCommand(cmd, this); };
+      document.getElementById('modal-command').textContent = cmd;
+      document.getElementById('modal-copy-btn').onclick    = () => copyCmd(cmd);
+      document.getElementById('modal-content').innerHTML   = '<div style="text-align:center;padding:40px;color:#5f6d88;">Chargement du standard…</div>';
 
-      document.getElementById('modal-content').innerHTML = '<div class="text-center py-10 text-slate-400"><i class="fa-solid fa-spinner fa-spin text-lg" aria-hidden="true"></i> Chargement...</div>';
-      
-      const modal = document.getElementById('skill-modal');
-      modal.classList.remove('hidden');
+      const overlay = document.getElementById('skill-modal');
+      overlay.classList.add('open');
       document.getElementById('modal-close-btn').focus();
+      document.body.style.overflow = 'hidden';
 
       try {
-        const res = await fetch(`${GITHUB_REPO_RAW}/${skill.path}`);
-        const markdown = await res.text();
-        document.getElementById('modal-content').innerHTML = marked.parse(markdown);
-      } catch (e) {
-        document.getElementById('modal-content').innerHTML = '<p class="text-red-600">Erreur lors du chargement du fichier standard depuis GitHub.</p>';
+        const res  = await fetch(`${GITHUB_RAW}/${skill.path}`);
+        const text = await res.text();
+        document.getElementById('modal-content').innerHTML = marked.parse(text);
+      } catch {
+        document.getElementById('modal-content').innerHTML = '<p style="color:#d63626;padding:20px;">Erreur lors du chargement du standard depuis GitHub.</p>';
       }
     }
 
     function closeModal() {
-      document.getElementById('skill-modal').classList.add('hidden');
-      if (lastFocusedElement) {
-        lastFocusedElement.focus();
+      document.getElementById('skill-modal').classList.remove('open');
+      document.body.style.overflow = '';
+      if (lastFocus) lastFocus.focus();
+    }
+
+    window.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    document.getElementById('skill-modal').addEventListener('click', e => {
+      if (e.target === document.getElementById('skill-modal')) closeModal();
+    });
+
+    /* ---- FAQ accordéon ---- */
+    function toggleFaq(btn) {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      /* Fermer tous les autres */
+      document.querySelectorAll('.faq-question').forEach(q => {
+        q.setAttribute('aria-expanded', 'false');
+        const answerId = q.getAttribute('aria-controls');
+        document.getElementById(answerId)?.classList.remove('open');
+      });
+      if (!expanded) {
+        btn.setAttribute('aria-expanded', 'true');
+        const answerId = btn.getAttribute('aria-controls');
+        document.getElementById(answerId)?.classList.add('open');
       }
     }
 
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
-    });
-
-    function copyCommand(text, btnElement) {
-      navigator.clipboard.writeText(text).then(() => {
-        const originalHtml = btnElement.innerHTML;
-        btnElement.innerHTML = '<i class="fa-solid fa-check text-emerald-600" aria-hidden="true"></i> Copié !';
-        btnElement.classList.add('bg-emerald-50', 'text-emerald-800', 'border-emerald-200');
-        setTimeout(() => {
-          btnElement.innerHTML = originalHtml;
-          btnElement.classList.remove('bg-emerald-50', 'text-emerald-800', 'border-emerald-200');
-        }, 1800);
-      });
+    /* ---- Copie et toast ---- */
+    function copyCmd(text) {
+      navigator.clipboard.writeText(text).then(() => showToast());
     }
 
-    initApp();
+    function showToast() {
+      const toast = document.getElementById('copy-toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    /* ---- Init ---- */
+    init();
   </script>
 </body>
 </html>
